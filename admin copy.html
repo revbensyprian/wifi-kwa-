@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WiFi Kwa Buku | Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #172b4d;
+    }
+
+    header {
+      background: #102b46;
+      color: white;
+      padding: 22px;
+    }
+
+    header h1 { margin: 0 0 8px; }
+    header p { margin: 0; color: #c7d9e8; }
+
+    nav {
+      background: #173a5e;
+      padding: 12px 22px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    main { padding: 24px; max-width: 1100px; margin: auto; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px;
+    }
+
+    .card, .panel {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #102b4610;
+    }
+
+    .card p { color: #64748b; margin: 0 0 12px; }
+    .number { font-size: 30px; font-weight: bold; }
+    .panel { margin-top: 22px; }
+    .status { color: #15803d; font-weight: bold; }
+
+    button {
+      background: #087e8b;
+      color: white;
+      border: 0;
+      padding: 12px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    button:hover { background: #066570; }
+    footer { text-align: center; padding: 25px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📶 WiFi Kwa Buku</h1>
+    <p>Network management and administration</p>
+  </header>
+
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#users">Users</a>
+    <a href="#connections">Connections</a>
+    <a href="#payments">Payments</a>
+  </nav>
+
+  <main>
+    <h2 id="overview">Admin Dashboard</h2>
+    <p>Welcome to your WiFi management system.</p>
+
+    <section class="cards">
+      <div class="card">
+        <p>Total users</p>
+        <div class="number" id="usersCount">0</div>
+      </div>
+      <div class="card">
+        <p>Active connections</p>
+        <div class="number" id="connectionsCount">0</div>
+      </div>
+      <div class="card">
+        <p>Total revenue (TZS)</p>
+        <div class="number" id="revenueCount">0</div>
+      </div>
+      <div class="card">
+        <p>Backend status</p>
+        <div class="status" id="backendStatus">Checking...</div>
+      </div>
+    </section>
+
+    <section class="panel" id="users">
+      <h2>Users</h2>
+      <p id="usersInfo">
+        User management will be connected to the database next.
+      </p>
+    </section>
+
+    <section class="panel" id="connections">
+      <h2>WiFi Connections</h2>
+      <p>Live session data has not been connected yet.</p>
+    </section>
+
+    <section class="panel" id="payments">
+      <h2>Payments</h2>
+      <p>Payment records and revenue will be added in a later step.</p>
+    </section>
+
+    <section class="panel">
+      <h2>System check</h2>
+      <p id="healthMessage">Checking your local backend...</p>
+      <button onclick="checkBackend()">Check backend again</button>
+    </section>
+  </main>
+
+  <footer>WiFi Kwa Buku Admin · Local development</footer>
+
+  <script>
+    async function checkBackend() {
+      const status = document.getElementById("backendStatus");
+      const message = document.getElementById("healthMessage");
+
+      status.textContent = "Checking...";
+      message.textContent = "Contacting the backend...";
+
+      try {
+        const response = await fetch("/api/health");
+        if (!response.ok) throw new Error("Server returned an error");
+
+        const data = await response.json();
+        status.textContent = "Online";
+        message.textContent = data.message || "Backend is responding.";
+      } catch (error) {
+        status.textContent = "Offline";
+        message.textContent =
+          "Could not reach the backend. Make sure server.js is running.";
+      }
+    }
+
+    checkBackend();
+  </script>
+</body>
+</html>
